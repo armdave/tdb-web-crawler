@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
-from persistence import ArticleSaver
+from common.persistence import ArticleSaver
 
 def is_story_content(soup):
     paragraphs = soup.find_all('p')

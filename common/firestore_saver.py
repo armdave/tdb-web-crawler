@@ -1,5 +1,5 @@
 from google.cloud import firestore
-from persistence import ArticleSaver
+from common.persistence import ArticleSaver
 
 import hashlib
 

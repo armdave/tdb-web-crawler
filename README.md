@@ -16,14 +16,6 @@ DNS Cache
 
 ## Run the tests
 
-Run all tests
-
 ```
-python -m unittest discover -s test -p "*.py"
-```
-
-Run single test file
-
-```
-python -m unittest test.{FILENAME}
+pytest
 ```

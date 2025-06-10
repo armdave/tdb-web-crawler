@@ -2,16 +2,16 @@ import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
-from job_dispatcher import enqueue_extraction_job
-from models import ExtractionJob, CrawlJob
-from robots import can_fetch
-from seed_urls import seed_urls
+from common.job_dispatcher import enqueue_extraction_job
+from common.models import ExtractionJob, CrawlJob
+from crawler.robots import can_fetch
+from crawler.seed_urls import seed_urls
 
 USER_AGENT = "DailyBriefingBot/1.0"
 
 async def crawl_worker(queue: asyncio.Queue, max_pages: int, visited: set, session: aiohttp.ClientSession):
     while not queue.empty() and len(visited) < max_pages:
-        if (len(visited) % 10 == 0):
+        if (len(visited) % 100 == 0):
             print('visited {} pages'.format(len(visited)))
 
         base_url = await queue.get()

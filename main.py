@@ -1,8 +1,8 @@
 import base64
 import asyncio
-from crawler import run_crawl_job_from_payload
-from firestore_saver import FirestoreArticleSaver
-from extractor import extract_and_save_content
+from crawler.crawler import run_crawl_job_from_payload
+from common.firestore_saver import FirestoreArticleSaver
+from crawler.extractor import extract_and_save_content
 import json
 
 def run_crawl_job(event, context):
@@ -29,4 +29,3 @@ def load_message(event):
 
     except Exception as e:
         print(f"Error processing extract job: {e}")
-

@@ -1,6 +1,6 @@
 import os
 from google.cloud import pubsub_v1
-from models import ExtractionJob
+from common.models import ExtractionJob
 
 PROJECT_ID = os.getenv("GCP_PROJECT")
 EXTRACTION_TOPIC_ID = os.getenv("PUBSUB_EXTRACTION_TOPIC")
