@@ -6,7 +6,7 @@ class MockRepository:
     def __init__(self):
         self.saved = []
 
-    def save(self, data):
+    def save_article(self, data):
         self.saved.append(data)
 
 @patch("crawler.extractor.extract_content")

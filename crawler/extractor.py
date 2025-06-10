@@ -41,4 +41,4 @@ def extract_content(url):
 def extract_and_save_content(url, repository: Repository):
     url_content = extract_content(url)
     if url_content:
-        repository.save(url_content)
+        repository.save_article(url_content)

@@ -29,3 +29,15 @@ class CrawlJob:
     def from_json(payload):
         data = json.loads(payload)
         return CrawlJob(**data)
+    
+@dataclass
+class IndexingJob:
+    article_id: str
+
+    def to_json(self):
+        return json.dumps(asdict(self))
+
+    @staticmethod
+    def from_json(payload):
+        data = json.loads(payload)
+        return CrawlJob(**data)
