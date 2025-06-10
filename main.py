@@ -1,7 +1,7 @@
 import base64
 import asyncio
 from crawler.crawler import run_crawl_job_from_payload
-from common.firestore_saver import FirestoreArticleSaver
+from common.firestore_repository import FirestoreRepository
 from crawler.extractor import extract_and_save_content
 import json
 
@@ -17,7 +17,7 @@ def run_extract_job(event, context):
     url = message_json.get('url')
 
     if url:
-        extract_and_save_content(url, FirestoreArticleSaver())
+        extract_and_save_content(url, FirestoreRepository())
     else:
         raise Exception("No URL provided in the message.")
 

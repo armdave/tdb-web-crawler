@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class ArticleSaver(ABC):
+class Repository(ABC):
 
     @abstractmethod
     def save(self, data: dict):

@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch
 from crawler.extractor import extract_and_save_content
 
-class MockSaver:
+class MockRepository:
     def __init__(self):
         self.saved = []
 
@@ -25,7 +25,7 @@ def test_extract_and_save_valid_story(mock_is_story, mock_extract):
     }
     mock_extract.return_value = expected_data
 
-    saver = MockSaver()
+    saver = MockRepository()
     extract_and_save_content(url, saver)
 
     assert len(saver.saved) == 1
@@ -34,7 +34,7 @@ def test_extract_and_save_valid_story(mock_is_story, mock_extract):
 @patch("crawler.extractor.is_story_content", return_value=False)
 def test_extract_and_save_non_story(mock_is_story):
     url = "https://example.com/landing"
-    saver = MockSaver()
+    saver = MockRepository()
 
     extract_and_save_content(url, saver)
 

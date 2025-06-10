@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
-from common.persistence import ArticleSaver
+from common.repository import Repository
 
 def is_story_content(soup):
     paragraphs = soup.find_all('p')
@@ -38,7 +38,7 @@ def extract_content(url):
     except:
         return None
     
-def extract_and_save_content(url, saver: ArticleSaver):
+def extract_and_save_content(url, repository: Repository):
     url_content = extract_content(url)
     if url_content:
-        saver.save(url_content)
+        repository.save(url_content)

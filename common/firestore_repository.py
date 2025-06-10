@@ -1,9 +1,9 @@
 from google.cloud import firestore
-from common.persistence import ArticleSaver
+from common.repository import Repository
 
 import hashlib
 
-class FirestoreArticleSaver(ArticleSaver):
+class FirestoreRepository(Repository):
 
     def __init__(self):
         self.client = firestore.Client()
