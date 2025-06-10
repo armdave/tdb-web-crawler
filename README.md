@@ -59,3 +59,45 @@ pytest
 ```
 
 ## Deploy
+
+### crawler
+
+```
+gcloud functions deploy crawler \
+  --runtime python311 \
+  --trigger-topic crawler \
+  --entry-point run_crawl_job \
+  --source . \
+  --region us-central1 \
+  --memory 512MB \
+  --timeout 300s \
+  --set-env-vars GCP_PROJECT={},PUBSUB_EXTRACTION_TOPIC={}
+  ```
+
+Manually trigger for testing purposes
+
+```
+gcloud pubsub topics publish crawler \
+  --message='{"seed_urls":["https://www.cnn.com"],"max_pages":1000,"num_workers":20}'
+```
+
+### crawler-extract 
+
+```
+gcloud functions deploy crawler-extract \
+  --runtime python311 \
+  --trigger-topic crawler-extract \
+  --entry-point run_extract_job \
+  --source . \
+  --region us-central1 \
+  --memory 512MB \
+  --timeout 60s \
+  --set-env-vars GCP_PROJECT={},PUBSUB_EXTRACTION_TOPIC={}
+```
+
+Manually trigger for testing purposes
+
+```
+gcloud pubsub topics publish crawler-extract \
+  --message='{"url":"https://www.cnn.com/politics/live-news"}'
+```
