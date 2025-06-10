@@ -11,9 +11,9 @@ def run_indexing_job(article_id: str, keyword_model: KeywordModel, repository: R
     data = repository.retrieve_article(article_id)
     body = data.get("body", "")
     if not body.strip():
-        print(f"Skipping {data.get("url", "")}: empty body")
+        print(f"Skipping {data.get('url', '')}: empty body")
         return
 
     keywords = keyword_model.extract_keywords(body)
-    print(f"Updating {data.get("url", "")} with keywords: {keywords}")
-    repository.update_article_keywords(doc, keywords)
+    print(f"Updating {data.get('url', '')} with keywords: {keywords}")
+    repository.update_article_keywords(article_id, keywords)

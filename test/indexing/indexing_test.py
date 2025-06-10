@@ -1,42 +1,54 @@
 import pytest
-from unittest.mock import MagicMock
-from indexing.indexing import run
+from unittest.mock import MagicMock, patch
+from indexing.indexing import enqueue_all_indexing_jobs, run_indexing_job
+from common.models import IndexingJob
 
-@pytest.fixture
-def fake_doc():
-    doc = MagicMock()
-    doc.id = "doc123"
-    doc.to_dict.return_value = {"body": "Apple and banana are fruits."}
-    return doc
+def test_enqueue_all_indexing_jobs():
+    mock_repo = MagicMock()
+    doc1 = MagicMock()
+    doc1.id = "article_1"
+    doc2 = MagicMock()
+    doc2.id = "article_2"
+    mock_repo.stream_articles.return_value = [doc1, doc2]
 
-@pytest.fixture
-def empty_doc():
-    doc = MagicMock()
-    doc.id = "doc_empty"
-    doc.to_dict.return_value = {"body": " "}
-    return doc
+    with patch("indexing.indexing.enqueue_indexing_job") as mock_enqueue:
+        enqueue_all_indexing_jobs(mock_repo)
 
-def test_run_updates_keywords_for_valid_docs(fake_doc):
+    mock_enqueue.assert_any_call(IndexingJob(article_id="article_1"))
+    mock_enqueue.assert_any_call(IndexingJob(article_id="article_2"))
+    assert mock_enqueue.call_count == 2
+
+def test_run_indexing_job_updates_keywords():
+    article_id = "abc123"
+    article_data = {
+        "body": "This is an example about apples and bananas.",
+        "url": "https://example.com/article"
+    }
+
+    mock_repo = MagicMock()
+    mock_repo.retrieve_article.return_value = article_data
+
     mock_model = MagicMock()
     mock_model.extract_keywords.return_value = [("apple", 0.9), ("banana", 0.8)]
 
+    run_indexing_job(article_id, mock_model, mock_repo)
+
+    mock_model.extract_keywords.assert_called_once_with(article_data["body"])
+    mock_repo.update_article_keywords.assert_called_once_with(article_id, [("apple", 0.9), ("banana", 0.8)])
+
+def test_run_indexing_job_skips_empty_body():
+    article_id = "abc456"
+    article_data = {
+        "body": "    ",  # whitespace only
+        "url": "https://example.com/empty"
+    }
+
     mock_repo = MagicMock()
-    mock_repo.stream_articles.return_value = [fake_doc]
+    mock_repo.retrieve_article.return_value = article_data
 
-    run(mock_model, mock_repo)
-
-    mock_model.extract_keywords.assert_called_once_with("Apple and banana are fruits.")
-    mock_repo.update_article_keywords.assert_called_once_with(
-        fake_doc,
-        [("apple", 0.9), ("banana", 0.8)]
-    )
-
-def test_run_skips_empty_documents(empty_doc):
     mock_model = MagicMock()
-    mock_repo = MagicMock()
-    mock_repo.stream_articles.return_value = [empty_doc]
 
-    run(mock_model, mock_repo)
+    run_indexing_job(article_id, mock_model, mock_repo)
 
     mock_model.extract_keywords.assert_not_called()
     mock_repo.update_article_keywords.assert_not_called()

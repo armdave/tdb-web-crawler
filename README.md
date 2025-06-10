@@ -9,8 +9,9 @@
 ## Performance
 
 ## Future Improvements
-Async job to do keyword processing
-Execute the js with playwright
+
+Execute js with playwright
+
 DNS Cache
 
 
