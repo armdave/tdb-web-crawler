@@ -5,9 +5,9 @@ from datetime import datetime
 from persistence import ArticleSaver
 
 def is_story_content(soup):
-    article_tags = soup.find_all(['article', 'section'])
-    long_text = sum(len(tag.get_text()) for tag in article_tags)
-    return long_text > 500
+    paragraphs = soup.find_all('p')
+    content = [p.get_text(strip=True) for p in paragraphs]
+    return len(' '.join(content)) > 1500
 
 def extract_content(url):
     try:
@@ -40,4 +40,5 @@ def extract_content(url):
     
 def extract_and_save_content(url, saver: ArticleSaver):
     url_content = extract_content(url)
-    saver.save(url_content)
+    if url_content:
+        saver.save(url_content)
